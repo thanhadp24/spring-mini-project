@@ -1,13 +1,15 @@
 package sun.vn.employee_management.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import sun.vn.employee_management.entity.Employee;
+import sun.vn.employee_management.dto.EmployeeRequest;
+import sun.vn.employee_management.dto.EmployeeResponse;
+import sun.vn.employee_management.service.EmployeeService;
 import sun.vn.employee_management.service.UtilityService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -19,18 +21,37 @@ public class EmployeeController {
     @Autowired
     private UtilityService utilityService;
 
-    private final List<Employee> employees = new ArrayList<>();
+    @Autowired
+    private EmployeeService employeeService;
 
     @PostMapping
-    public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee) {
-        employee.setId(utilityService.generateEmployeeId());
-        employee.setPassword(passwordEncoder.encode(employee.getPassword()));
-        employees.add(employee);
-        return ResponseEntity.ok(employee);
+    public ResponseEntity<EmployeeResponse> createEmployee(@RequestBody EmployeeRequest employeeReq) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(employeeService.createEmployee(employeeReq));
     }
 
     @GetMapping
-    public ResponseEntity<List<Employee>> getAllEmployees() {
-        return ResponseEntity.ok(employees);
+    public ResponseEntity<List<EmployeeResponse>> getAllEmployees() {
+        return ResponseEntity.ok(employeeService.getAllEmployees());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<EmployeeResponse> getEmployee(@PathVariable Long id) {
+        return ResponseEntity.ok(employeeService.getEmployee(id));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<EmployeeResponse> updateEmployee(@PathVariable Long id, @RequestBody EmployeeRequest employeeReq) {
+        return ResponseEntity.ok(employeeService.updateEmployee(id, employeeReq));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
+        employeeService.deleteEmployee(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<EmployeeResponse>> searchByNameOrDepartment(@RequestParam String keyword) {
+        return ResponseEntity.ok(employeeService.searchByNameOrDepartment(keyword));
     }
 }
