@@ -1,8 +1,6 @@
 package sun.vn.employee_management.service;
 
-import jakarta.annotation.PostConstruct;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +30,7 @@ public class EmployeeService {
     public EmployeeResponse createEmployee(EmployeeRequest employeeReq) {
         Employee employee = modelMapper.map(employeeReq, Employee.class);
 
-        Department department = departmentRepository.findById(employeeReq.getdepartment().getId())
+        Department department = departmentRepository.findById(employeeReq.getDepartment().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Department not found"));
         employee.setDepartment(department);
 
@@ -54,8 +52,8 @@ public class EmployeeService {
 
     public EmployeeResponse updateEmployee(Long id, EmployeeRequest employeeReq) {
         Employee employeeInDb = getEmployeeById(id);
-        if (employeeReq.getdepartment() != null) {
-            Department department = departmentRepository.findById(employeeReq.getdepartment().getId())
+        if (employeeReq.getDepartment() != null) {
+            Department department = departmentRepository.findById(employeeReq.getDepartment().getId())
                     .orElseThrow(() -> new ResourceNotFoundException("Department not found"));
             employeeInDb.setDepartment(department);
         }
