@@ -5,6 +5,8 @@ import com.example.dto.EmployeeResponse;
 import com.example.service.EmployeeService;
 import com.example.service.UtilityService;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,34 +28,42 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
+    private static final Logger logger = LoggerFactory.getLogger("EMPLOYEE_CONTROLLER");
+
     @PostMapping
     public ResponseEntity<EmployeeResponse> createEmployee(@Valid @RequestBody EmployeeRequest employeeReq) {
+        logger.info("Received request to create employee: {}", employeeReq.getName());
         return ResponseEntity.status(HttpStatus.CREATED).body(employeeService.createEmployee(employeeReq));
     }
 
     @GetMapping
     public ResponseEntity<List<EmployeeResponse>> getAllEmployees() {
+        logger.info("Received request to fetch all employees");
         return ResponseEntity.ok(employeeService.getAllEmployees());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<EmployeeResponse> getEmployee(@PathVariable Long id) {
+        logger.info("Received request to fetch employee with id: {}", id);
         return ResponseEntity.ok(employeeService.getEmployee(id));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<EmployeeResponse> updateEmployee(@PathVariable Long id,@Valid @RequestBody EmployeeRequest employeeReq) {
+        logger.info("Received request to update employee with id: {}", id);
         return ResponseEntity.ok(employeeService.updateEmployee(id, employeeReq));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
+        logger.info("Received request to delete employee with id: {}", id);
         employeeService.deleteEmployee(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/search")
     public ResponseEntity<List<EmployeeResponse>> searchByNameOrDepartment(@RequestParam String keyword) {
+        logger.info("Received request to search employees with keyword: {}", keyword);
         return ResponseEntity.ok(employeeService.searchByNameOrDepartment(keyword));
     }
 }
