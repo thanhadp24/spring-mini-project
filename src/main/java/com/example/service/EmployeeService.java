@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -81,7 +82,14 @@ public class EmployeeService {
                 .stream().map(e -> modelMapper.map(e, EmployeeResponse.class)).toList();
     }
 
+    @Cacheable(value = "totalEmployees")
+    public long countTotalEmployees() {
+        logger.info("Counting total employees");
+        return employeeRepository.count();
+    }
+
     public Employee getEmployeeById(Long id) {
         return employeeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Employee not found with id: " + id));
     }
+
 }

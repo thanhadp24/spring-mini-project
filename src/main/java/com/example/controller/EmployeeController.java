@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -65,5 +66,12 @@ public class EmployeeController {
     public ResponseEntity<List<EmployeeResponse>> searchByNameOrDepartment(@RequestParam String keyword) {
         logger.info("Received request to search employees with keyword: {}", keyword);
         return ResponseEntity.ok(employeeService.searchByNameOrDepartment(keyword));
+    }
+
+    @GetMapping("/total-employees")
+    public ResponseEntity<Long> getTotalEmployees() {
+        logger.info("Received request to get total number of employees");
+        Long totalEmployees = employeeService.countTotalEmployees();
+        return ResponseEntity.ok(totalEmployees);
     }
 }
