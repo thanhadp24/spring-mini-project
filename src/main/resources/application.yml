@@ -14,8 +14,16 @@ spring:
     caffeine:
       spec: expireAfterWrite=1m
 
+security:
+  jwt:
+    secret: abcdefghijklmnopqrstuvwxyz123456789!@#$%^&*()
+    expiration: 864000
+
 management:
   endpoints:
     web:
       exposure:
-        include: health,metrics
+        include:
+          include:
+            - health
+            - metrics

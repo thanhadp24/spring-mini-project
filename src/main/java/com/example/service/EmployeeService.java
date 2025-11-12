@@ -65,8 +65,9 @@ public class EmployeeService {
                 .orElseThrow(() -> new ResourceNotFoundException("Department not found"));
         employeeInDb.setDepartment(department);
         modelMapper.map(employeeReq, employeeInDb);
+        Employee saved = employeeRepository.save(employeeInDb);
         logger.info("Employee with id: {} updated successfully", id);
-        return modelMapper.map(employeeRepository.save(employeeInDb), EmployeeResponse.class);
+        return modelMapper.map(saved, EmployeeResponse.class);
     }
 
     public void deleteEmployee(Long id) {

@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EmployeeRequest {
-    private Long id;
+//    private Long id;
 
     @NotBlank(message = "Name is required")
     @Size(min = 5, max = 20, message = "Name must be between 5 and 20 characters")
