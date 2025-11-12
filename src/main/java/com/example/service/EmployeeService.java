@@ -1,5 +1,6 @@
 package com.example.service;
 
+import com.example.dto.DepartmentStatisticDto;
 import com.example.dto.EmployeeRequest;
 import com.example.dto.EmployeeResponse;
 import com.example.entity.Department;
@@ -87,6 +88,11 @@ public class EmployeeService {
     public long countTotalEmployees() {
         logger.info("Counting total employees");
         return employeeRepository.count();
+    }
+
+    public List<DepartmentStatisticDto> getDepartmentStatistics() {
+        logger.info("Fetching department statistics");
+        return employeeRepository.getDepartmentStatistics();
     }
 
     public Employee getEmployeeById(Long id) {

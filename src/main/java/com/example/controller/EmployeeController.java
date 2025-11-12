@@ -1,5 +1,6 @@
 package com.example.controller;//package sun.vn.employee_management.controller;
 
+import com.example.dto.DepartmentStatisticDto;
 import com.example.dto.EmployeeRequest;
 import com.example.dto.EmployeeResponse;
 import com.example.service.EmployeeService;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +33,7 @@ public class EmployeeController {
 
     private static final Logger logger = LoggerFactory.getLogger("EMPLOYEE_CONTROLLER");
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<EmployeeResponse> createEmployee(@Valid @RequestBody EmployeeRequest employeeReq) {
         logger.info("Received request to create employee: {}", employeeReq.getName());
@@ -49,12 +52,14 @@ public class EmployeeController {
         return ResponseEntity.ok(employeeService.getEmployee(id));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<EmployeeResponse> updateEmployee(@PathVariable Long id,@Valid @RequestBody EmployeeRequest employeeReq) {
         logger.info("Received request to update employee with id: {}", id);
         return ResponseEntity.ok(employeeService.updateEmployee(id, employeeReq));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
         logger.info("Received request to delete employee with id: {}", id);
@@ -73,5 +78,11 @@ public class EmployeeController {
         logger.info("Received request to get total number of employees");
         Long totalEmployees = employeeService.countTotalEmployees();
         return ResponseEntity.ok(totalEmployees);
+    }
+
+    @GetMapping("/statistics")
+    public ResponseEntity<List<DepartmentStatisticDto>> getDepartmentStatistics() {
+        logger.info("Received request to get department statistics");
+        return ResponseEntity.ok(employeeService.getDepartmentStatistics());
     }
 }

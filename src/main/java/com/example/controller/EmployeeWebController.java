@@ -67,5 +67,11 @@ public class EmployeeWebController {
         return "employees/search";
     }
 
-
+    @GetMapping("/statistics")
+    public String viewDepartmentStatistics(Model model) {
+        logger.info("Viewing department statistics");
+        model.addAttribute("statistics", employeeService.getDepartmentStatistics());
+        model.addAttribute("totalEmployees", employeeService.countTotalEmployees());
+        return "employees/statistics";
+    }
 }
